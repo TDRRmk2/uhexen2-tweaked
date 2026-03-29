@@ -46,6 +46,7 @@ extern int		menu_numcachepics;
 extern cachepic_t	menu_cachepics[MAX_CACHED_PICS];
 extern hashindex_t	hash_gltextures;
 extern hashindex_t	hash_cachepics;
+extern cvar_t	r_viewmodelfovwarp;
 
 extern void R_InitBubble (void);
 
@@ -252,6 +253,8 @@ void R_Init (void)
 	Cvar_RegisterVariable (&gl_coloredlight);
 	Cvar_RegisterVariable (&gl_colored_dynamic_lights);
 	Cvar_RegisterVariable (&gl_extra_dynamic_lights);
+
+	Cvar_RegisterVariable (&r_viewmodelfovwarp);
 
 	R_InitBubble();
 

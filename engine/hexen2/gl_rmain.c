@@ -109,6 +109,8 @@ cvar_t	gl_coloredlight = {"gl_coloredlight", "0", CVAR_ARCHIVE};
 cvar_t	gl_colored_dynamic_lights = {"gl_colored_dynamic_lights", "0", CVAR_ARCHIVE};
 cvar_t	gl_extra_dynamic_lights = {"gl_extra_dynamic_lights", "0", CVAR_ARCHIVE};
 
+cvar_t	r_viewmodelfovwarp = {"r_viewmodelfovwarp", "1", CVAR_ARCHIVE};
+
 //=============================================================================
 
 
@@ -875,7 +877,7 @@ static void R_DrawAliasModel (entity_t *e)
 		tmatrix[2][3] += sin(e->origin[0] + e->origin[1] + (cl.time*3)) * 5.5;
 	}
 
-	if (e == &cl.viewent && scr_fov.integer > 90) /* compensate viewmodel distortion at fov>90 */
+	if (e == &cl.viewent && scr_fov.integer > 90 && !r_viewmodelfovwarp.integer) /* compensate viewmodel distortion at fov>90 */
 	{
 		float fovscale = tan(scr_fov.value * (0.5 * M_PI / 180));
 		glTranslatef_fp (tmatrix[0][3], tmatrix[1][3] * fovscale, tmatrix[2][3] * fovscale);	// paliashdr->scale_origin[0..2]
