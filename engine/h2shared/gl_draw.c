@@ -93,7 +93,7 @@ static const char	*cs_data = {
 	"................................"
 };
 
-int		gl_filter_idx = 4; /* Bilinear */
+int		gl_filter_idx = 2; /* Nearest with linear mipmap */
 
 gltexture_t	gltextures[MAX_GLTEXTURES];
 int			numgltextures;
@@ -299,6 +299,13 @@ glmode_t gl_texmodes[NUM_GL_FILTERS] =
 	{ "GL_LINEAR_MIPMAP_NEAREST",	GL_LINEAR_MIPMAP_NEAREST,	GL_LINEAR  },	/* Bilinear, 1 mipmap	*/
 	{ "GL_LINEAR_MIPMAP_LINEAR",	GL_LINEAR_MIPMAP_LINEAR,	GL_LINEAR  }	/* Trilinear: 2 mipmaps	*/
 };
+
+void gl_ApplyTexmode()
+{
+	const int filterMode = (gl_filter_idx < 3) ? GL_NEAREST : GL_LINEAR;
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+}
 
 /*
 ===============
@@ -602,6 +609,8 @@ void Draw_Character (int x, int y, unsigned int num)
 
 	GL_Bind (char_texture);
 
+	gl_ApplyTexmode();
+
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (fcol, frow);
 	glVertex2f_fp (x, y);
@@ -659,6 +668,7 @@ void Draw_Crosshair (void)
 		glTexEnvf_fp (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glColor4ubv_fp (pColor);
 		GL_Bind (cs_texture);
+		gl_ApplyTexmode();
 
 		// Our crosshair is now 32x32, but we're drawing 16x16 here
 		// to have a smaller pic. If, in the pixmap, the pixels are
@@ -730,6 +740,8 @@ void Draw_SmallCharacter (int x, int y, int num)
 
 	GL_Bind (char_smalltexture);
 
+	gl_ApplyTexmode();
+
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (fcol, frow);
 	glVertex2f_fp (x, y);
@@ -779,6 +791,8 @@ void Draw_BigCharacter (int x, int y, int num)
 
 	GL_Bind (char_menufonttexture);
 
+	gl_ApplyTexmode();
+
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (fcol, frow);
 	glVertex2f_fp (x, y);
@@ -804,6 +818,8 @@ void Draw_Pic (int x, int y, qpic_t *pic)
 	gl = (glpic_t *)pic->data;
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
+
+	gl_ApplyTexmode();
 
 	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -838,6 +854,7 @@ void Draw_AlphaPic (int x, int y, qpic_t *pic, float alpha)
 	glCullFace_fp(GL_FRONT);
 	glColor4f_fp (1,1,1,alpha);
 	GL_Bind (gl->texnum);
+	gl_ApplyTexmode();
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (gl->sl, gl->tl);
 	glVertex2f_fp (x, y);
@@ -926,6 +943,8 @@ void Draw_IntermissionPic (qpic_t *pic)
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
 
+	gl_ApplyTexmode();
+
 	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
@@ -965,6 +984,7 @@ void Draw_SubPic (int x, int y, qpic_t *pic, int srcx, int srcy, int width, int 
 
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
+	gl_ApplyTexmode();
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (newsl, newtl);
 	glVertex2f_fp (x, y);
@@ -1021,6 +1041,7 @@ void Draw_PicCropped (int x, int y, qpic_t *pic)
 
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
+	gl_ApplyTexmode();
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (gl->sl, tl);
 	glVertex2f_fp (x, y);
@@ -1082,6 +1103,7 @@ void Draw_SubPicCropped (int x, int y, int h, qpic_t *pic)
 
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
+	gl_ApplyTexmode();
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (gl->sl, tl);
 	glVertex2f_fp (x, y);
@@ -1152,8 +1174,7 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation, int p
 
 	glTexImage2D_fp (GL_TEXTURE_2D, 0, gl_alpha_format, PLAYER_DEST_WIDTH, PLAYER_DEST_HEIGHT,
 			 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gl_ApplyTexmode();
 
 	glColor3f_fp (1,1,1);
 	glBegin_fp (GL_QUADS);
@@ -1182,6 +1203,8 @@ static void Draw_ConsolePic (int lines, float ofs, GLuint num, float alpha)
 	glCullFace_fp(GL_FRONT);
 	glColor4f_fp (1,1,1,alpha);
 	GL_Bind (num);
+
+	gl_ApplyTexmode();
 
 	glBegin_fp (GL_QUADS);
 	glTexCoord2f_fp (0, 0 + ofs);
@@ -1660,27 +1683,11 @@ static void GL_Upload32 (unsigned int *data, gltexture_t *glt)
 		}
 	}
 
-	if (glt->flags & TEX_NEAREST)
+	gl_ApplyTexmode();
+	if (glt->flags & TEX_MIPMAP)
 	{
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	}
-	else if (glt->flags & TEX_LINEAR)
-	{
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	}
-	else if (glt->flags & TEX_MIPMAP)
-	{
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texmodes[gl_filter_idx].minimize);
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texmodes[gl_filter_idx].maximize);
 		if (gl_max_anisotropy >= 2)
 			glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, gl_texture_anisotropy.value);
-	}
-	else
-	{
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texmodes[gl_filter_idx].maximize);
-		glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texmodes[gl_filter_idx].maximize);
 	}
 
 	if (mark)

@@ -21,6 +21,7 @@
 
 #include "quakedef.h"
 #include "hashindex.h"
+#include "gl_utils.h"
 
 byte			*playerTranslation;
 const int	color_offsets[MAX_PLAYER_CLASS] =
@@ -373,8 +374,7 @@ void R_TranslatePlayerSkin (int playernum)
 	GL_Bind(playertextures[playernum]);
 	glTexImage2D_fp(GL_TEXTURE_2D, 0, gl_solid_format, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gl_ApplyTexmode();
 }
 
 /*

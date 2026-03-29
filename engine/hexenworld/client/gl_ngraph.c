@@ -145,8 +145,7 @@ void R_NetGraph (void)
 				GL_UNSIGNED_BYTE, ngraph_pixels);
 
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gl_ApplyTexmode();
 
 	x = 8;
 	glColor3f_fp (1,1,1);

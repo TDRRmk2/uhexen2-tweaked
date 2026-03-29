@@ -19,6 +19,7 @@
  */
 
 #include "quakedef.h"
+#include "gl_utils.h"
 
 int		skytexturenum;
 
@@ -242,11 +243,13 @@ static void EmitSkyPolysMulti (msurface_t *fa)
 
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	GL_Bind (solidskytexture);
+	gl_ApplyTexmode();
 
 	glActiveTextureARB_fp (GL_TEXTURE1_ARB);
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glEnable_fp(GL_TEXTURE_2D);
 	GL_Bind (alphaskytexture);
+	gl_ApplyTexmode();
 
 	for (p = fa->polys ; p ; p = p->next)
 	{
@@ -333,6 +336,8 @@ void EmitBothSkyLayers (msurface_t *fa)
 	}
 
 	GL_Bind(solidskytexture);
+	gl_ApplyTexmode();
+
 	speedscale = realtime*8;
 	speedscale -= (int)speedscale & ~127;
 
@@ -342,6 +347,7 @@ void EmitBothSkyLayers (msurface_t *fa)
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glColor4f_fp(1.0f, 1.0f, 1.0f, r_skyalpha.value);
 	GL_Bind (alphaskytexture);
+	gl_ApplyTexmode();
 	speedscale = realtime*16;
 	speedscale -= (int)speedscale & ~127;
 
@@ -370,6 +376,7 @@ void R_DrawSkyChain (msurface_t *s)
 	}
 
 	GL_Bind(solidskytexture);
+	gl_ApplyTexmode();
 	speedscale = realtime*8;
 	speedscale -= (int)speedscale & ~127;
 
@@ -380,6 +387,7 @@ void R_DrawSkyChain (msurface_t *s)
 	glTexEnvf_fp(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glColor4f_fp(1.0f, 1.0f, 1.0f, r_skyalpha.value);
 	GL_Bind (alphaskytexture);
+	gl_ApplyTexmode();
 	speedscale = realtime*16;
 	speedscale -= (int)speedscale & ~127;
 
@@ -979,6 +987,7 @@ void R_DrawSkyChain (msurface_t *s)
 
 //	c_sky = 0;
 	GL_Bind(solidskytexture);
+	gl_ApplyTexmode();
 
 	// calculate vertex values for sky box
 	for (fa = s ; fa ; fa = fa->texturechain)
@@ -1072,6 +1081,7 @@ void R_DrawSkyBox (void)
 			continue;
 
 		GL_Bind(sky_tex[skytexorder[i]]);
+		gl_ApplyTexmode();
 #if 0
 		skymins[0][i] = -1;
 		skymins[1][i] = -1;
