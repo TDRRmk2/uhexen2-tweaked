@@ -1016,6 +1016,9 @@ void Draw_PicCropped (int x, int y, qpic_t *pic)
 		th = gl->th;//(height-0.01)/pic->height;
 	}
 
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
 	glColor4f_fp (1,1,1,1);
 	GL_Bind (gl->texnum);
 	glBegin_fp (GL_QUADS);
@@ -1028,6 +1031,9 @@ void Draw_PicCropped (int x, int y, qpic_t *pic)
 	glTexCoord2f_fp (gl->sl, th);
 	glVertex2f_fp (x, y+height);
 	glEnd_fp ();
+
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf_fp(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void Draw_SubPicCropped (int x, int y, int h, qpic_t *pic)
