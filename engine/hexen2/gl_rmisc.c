@@ -256,6 +256,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&gl_extra_dynamic_lights);
 
 	Cvar_RegisterVariable (&r_viewmodelfovwarp);
+	Cvar_RegisterVariable (&gl_ambientlight);
 
 	R_InitBubble();
 

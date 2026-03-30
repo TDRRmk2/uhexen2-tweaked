@@ -264,6 +264,9 @@ extern	cvar_t	gl_coloredlight;
 extern	cvar_t	gl_colored_dynamic_lights;
 extern	cvar_t	gl_extra_dynamic_lights;
 extern	cvar_t	gl_lightmapfmt;
+extern	cvar_t	gl_ambientlight;
+
+extern int gl_currambientlight;
 
 /* other globals */
 extern	int		gl_coloredstatic;	/* value of gl_coloredlight stored at level start */

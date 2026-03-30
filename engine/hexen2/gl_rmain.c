@@ -49,6 +49,8 @@ static float	r_lasttime1 = 0;
 
 extern qmodel_t	*player_models[MAX_PLAYER_CLASS];
 
+int gl_currambientlight;
+
 //
 // view origin
 //
@@ -790,6 +792,15 @@ static void R_DrawAliasModel (entity_t *e)
 			ambientlight = 128;
 		if (ambientlight + shadelight > 192)
 			shadelight = 192 - ambientlight;
+
+		if(lightcolor[0] < gl_currambientlight)
+			lightcolor[0] = gl_currambientlight;
+		if(lightcolor[1] < gl_currambientlight)
+			lightcolor[1] = gl_currambientlight;
+		if(lightcolor[2] < gl_currambientlight)
+			lightcolor[2] = gl_currambientlight;
+		if(shadelight < gl_currambientlight)
+			shadelight = gl_currambientlight;
 	}
 
 	shadedots = r_avertexnormal_dots[((int)(e->angles[1] * (SHADEDOT_QUANT / 360.0))) & (SHADEDOT_QUANT - 1)];
@@ -1417,6 +1428,15 @@ static void R_DrawViewModel (void)
 			ambientlight += add;
 		}
 	}
+
+	if(lightcolor[0] < gl_currambientlight)
+		lightcolor[0] = gl_currambientlight;
+	if(lightcolor[1] < gl_currambientlight)
+		lightcolor[1] = gl_currambientlight;
+	if(lightcolor[2] < gl_currambientlight)
+		lightcolor[2] = gl_currambientlight;
+	if(shadelight < gl_currambientlight)
+		shadelight = gl_currambientlight;
 
 	cl.light_level = ambientlight;
 

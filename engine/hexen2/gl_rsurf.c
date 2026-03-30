@@ -24,6 +24,7 @@
 
 int		gl_lightmap_format = GL_RGBA;
 cvar_t		gl_lightmapfmt = {"gl_lightmapfmt", "GL_RGBA", CVAR_ARCHIVE};
+cvar_t		gl_ambientlight = {"gl_ambientlight", "0", CVAR_ARCHIVE};
 int		lightmap_bytes = 4;		// 1, 2, or 4. default is 4 for GL_RGBA
 GLuint		lightmap_textures[MAX_LIGHTMAPS];
 
@@ -200,6 +201,12 @@ static void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	unsigned int	scale;
 	int		maps;
 	unsigned int	*bl, *blcr, *blcg, *blcb;
+	int ambientlight = gl_ambientlight.integer;
+
+	if(ambientlight > 255)
+		ambientlight = 255;
+	else if(ambientlight < 0)
+		ambientlight = 0;
 
 	surf->cached_dlight = (surf->dlightframe == r_framecount);
 
@@ -295,6 +302,13 @@ store:
 					r = 255;
 				if (s > 255)
 					s = 255;
+
+				if (q < ambientlight)
+					q = ambientlight;
+				if (r < ambientlight)
+					r = ambientlight;
+				if (s < ambientlight)
+					s = ambientlight;
 
 				if (gl_coloredlight.integer)
 				{

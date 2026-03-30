@@ -236,6 +236,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&gl_coloredlight);
 	Cvar_RegisterVariable (&gl_colored_dynamic_lights);
 	Cvar_RegisterVariable (&gl_extra_dynamic_lights);
+	Cvar_RegisterVariable (&gl_ambientlight);
 
 	R_InitBubble();
 

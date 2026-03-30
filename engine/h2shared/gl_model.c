@@ -686,6 +686,12 @@ static void Mod_LoadLighting (lump_t *l)
 	GL_SetupLightmapFmt();	// setup the lightmap format to reflect any
 				// changes via the cvar gl_lightmapfmt
 
+	gl_currambientlight = gl_ambientlight.integer;
+	if(gl_currambientlight > 255)
+		gl_currambientlight = 255;
+	else if(gl_currambientlight < 0)
+		gl_currambientlight = 0;
+
 	// bound the gl_coloredlight value
 	if (gl_coloredlight.integer < 0)
 		Cvar_Set ("gl_coloredlight", "0");
